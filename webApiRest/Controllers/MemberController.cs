@@ -68,12 +68,16 @@ namespace webApiRest.Controllers
             Member postMember = Newtonsoft.Json.JsonConvert.DeserializeObject<Member>(contentString);
 
 
+            if (MemberRepository.IsExists(postMember.FullName))
+            {
+                retVal = controllerContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest,"Ayni isimde baska bir kullanici var");
+            }
 
-
-
-
-
-
+            else
+            {
+                Member createMember = MemberRepository.Add(postMember.FullName, postMember.Age);
+                retVal = controllerContext.Request.CreateResponse(HttpStatusCode.OK,createMember);
+            }
 
             return retVal;
         }
